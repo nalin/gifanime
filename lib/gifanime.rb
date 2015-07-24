@@ -13,7 +13,7 @@ class Gifanime
   end
 
   def add(frame)
-    frames << open(frame).read
+    frames << ::Magick::Image.from_blob open(frame).read
   end
 
   def generate!
