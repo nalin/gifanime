@@ -1,19 +1,19 @@
 require "RMagick"
-class Gifanime
-  attr_accessor :frames, :delay, :iterations, :scene, :ticks_per_secound, :outputfile
+require "open-uri"
 
-  def initialize(outputfile, options = {})
+class Gifanime
+  attr_accessor :frames, :delay, :iterations, :scene, :ticks_per_secound
+
+  def initialize(options = {})
     @delay             = options[:delay]
     @iterations        = options[:iterations]
     @scene             = options[:scene]
     @ticks_per_secound = options[:ticks_per_secound]
-    outputfile = outputfile + ".gif" unless outputfile =~ /\.gif\z/
-    @outputfile        = outputfile
     @frames = []
   end
 
   def add(frame)
-    frames << frame
+    frames << open(frame).read
   end
 
   def generate!
@@ -22,7 +22,7 @@ class Gifanime
     gif.iterations = iterations if iterations
     gif.scene = scene if scene
     gif.ticks_per_secound = ticks_per_secound if ticks_per_secound
-    gif.write(outputfile)
+    return gif.to_blob
   end
 end
 
